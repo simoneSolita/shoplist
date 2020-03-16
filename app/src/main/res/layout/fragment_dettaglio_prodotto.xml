@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="2dp"
+        android:id="@+id/relativeAggiungi"
+        tools:context="com.academy.shoplist.activity.AggiungiProdottoActivity">
+
+        <ImageView
+            android:id="@+id/img_dettaglio_img_prodotto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_below="@+id/img_dettaglio_img_prodotto"
+            android:id="@+id/textview_nome_prodotto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:padding="4dp"
+            android:textSize="20sp"
+            android:text="@string/nome_prodotto"/>
+
+        <TextView
+            android:id="@+id/textView_valore_nome_prodotto"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:padding="4dp"
+            android:layout_below="@+id/textview_nome_prodotto"/>
+
+        <TextView
+            android:id="@+id/textview_descrizione_prodotto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/descrizione_prodotto"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:padding="4dp"
+            android:layout_below="@+id/textView_valore_nome_prodotto"
+            android:layout_alignStart="@+id/textview_nome_prodotto"/>
+
+        <TextView
+            android:id="@+id/textView_valore_descrizione_prodotto"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:padding="4dp"
+            android:layout_below="@+id/textview_descrizione_prodotto"/>
+
+
+    </RelativeLayout>
+
+</FrameLayout>
