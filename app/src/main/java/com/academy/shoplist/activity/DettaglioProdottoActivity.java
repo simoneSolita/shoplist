@@ -10,58 +10,61 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.academy.shoplist.R;
-import com.academy.shoplist.bean.Prodotto;
 import com.academy.shoplist.constants.IntentConstant;
-import com.academy.shoplist.database.ShoplistDatabaseManager;
-import com.academy.shoplist.singleton.ShoplistApplication;
+import com.academy.shoplist.fragment.DettaglioProdottoFragment;
+import com.academy.shoplist.fragment.ModificaProdottoFragment;
+import com.academy.shoplist.interfaces.FragmentModificaListener;
 
-import java.util.ArrayList;
+public class DettaglioProdottoActivity extends AppCompatActivity implements FragmentModificaListener {
 
-public class DettaglioProdottoActivity extends AppCompatActivity {
-
-    String nomeProdotto;
+    String idProdotto;
     int modalitaApertura;
+
+    private ModificaProdottoFragment editFragment;
+    private DettaglioProdottoFragment viewFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dettaglio_prodotto_activity);
 
-        if (getIntent() != null){
-            if (getIntent().hasExtra(IntentConstant.NOME_PRODOTTO)){
-                nomeProdotto = getIntent().getStringExtra(IntentConstant.NOME_PRODOTTO);
+        if (getIntent() != null) {
+            if (getIntent().hasExtra(IntentConstant.ID_PRODOTTO)) {
+                idProdotto = getIntent().getStringExtra(IntentConstant.ID_PRODOTTO);
             }
-            if (getIntent().hasExtra(IntentConstant.MODALITA_APERTURA)){
-                modalitaApertura = getIntent().getIntExtra(IntentConstant.MODALITA_APERTURA,0);
+            if (getIntent().hasExtra(IntentConstant.MODALITA_APERTURA)) {
+                modalitaApertura = getIntent().getIntExtra(IntentConstant.MODALITA_APERTURA, 0);
             }
         }
         setActionbar();
-        setContent();
-    }
 
-    private void setContent() {
+        Bundle args = new Bundle();
+        args.putString(IntentConstant.ID_PRODOTTO, idProdotto);
 
-        TextView txtViewValoreNomeProdotto = (TextView) findViewById(R.id.textView_valore_nome_prodotto);
-        TextView txtViewValoreDescrizioneProdotto = (TextView) findViewById(R.id.textView_valore_descrizione_prodotto);
-        ImageView imgDettaglioProdotto = (ImageView) findViewById(R.id.img_dettaglio_img_prodotto);
+        if (IntentConstant.VISUALIZZA == modalitaApertura) {
+            viewFragment = new DettaglioProdottoFragment();
+            viewFragment.setArguments(args);
 
-        Prodotto prodottoToShow = null;
-        if (!TextUtils.isEmpty(nomeProdotto)) {
-            ArrayList<Prodotto> prodottiToShow = ShoplistDatabaseManager.getInstance(DettaglioProdottoActivity.this).getProdottiByCursor(ShoplistDatabaseManager.getInstance(DettaglioProdottoActivity.this).getProdottiByNome(nomeProdotto));
-            if (prodottiToShow != null && !prodottiToShow.isEmpty()) {
-                prodottoToShow = prodottiToShow.get(0);
-                if (prodottoToShow != null) {
-                    txtViewValoreNomeProdotto.setText(prodottoToShow.getNome());
-                    txtViewValoreDescrizioneProdotto.setText(prodottoToShow.getDescrizione());
-                    imgDettaglioProdotto.setImageResource(prodottoToShow.getImmagine());
-                } else {
-                    Toast.makeText(this, R.string.nessun_elemento_da_visualizzare, Toast.LENGTH_LONG).show();
-                }
-            }
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container, viewFragment);
+            fragmentTransaction.commit();
+        } else if (IntentConstant.MODIFICA == modalitaApertura) {
+            editFragment = new ModificaProdottoFragment();
+            editFragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, editFragment)
+                    .commit();
         }
+
+
     }
+
 
     // imposta l'aspetto iniziale della actionBar
     private void setActionbar() {
@@ -84,5 +87,11 @@ public class DettaglioProdottoActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public int onItemClicked(int position) {
+        //TODO modificare
+        return 0;
     }
 }

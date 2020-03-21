@@ -39,6 +39,16 @@
             android:layout_alignParentEnd="true"
             android:visibility="gone"
             android:layout_marginEnd="4dp"/>
+        <Button
+            android:id="@+id/conferma_toolbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conferma_aggiunta"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone"
+            android:background="@drawable/button_background"
+            android:layout_marginEnd="4dp"/>
 
 
     </RelativeLayout>

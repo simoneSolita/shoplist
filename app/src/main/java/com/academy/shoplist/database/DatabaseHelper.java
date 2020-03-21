@@ -73,11 +73,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void createShopListDB(SQLiteDatabase database) {
         Log.d("createDataBase", "create database " + DB_NAME);
         database.execSQL(DatabaseTables.SQL_CREATE_PRODOTTO);
+        database.execSQL(DatabaseTables.SQL_CREATE_IMMAGINE);
     }
 
     private void dropAllTable(SQLiteDatabase database) {
         Log.d("createDataBase", "DROP ALL TABLES ");
         dropTable(database, DbConstants.PRODOTTI_TABLE);
+        dropTable(database, DbConstants.IMMAGINE_TABLE);
 
     }
 

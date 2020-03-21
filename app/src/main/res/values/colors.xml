@@ -1,7 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <color name="colorPrimary">#E82B2A2A</color>-->
-<!--    <color name="colorPrimaryDark">#0F0F11</color>-->
-<!--    <color name="colorAccent">#F86110</color>-->
-<!--    <color name="white">#FDFD</color>-->
+    <color name="orange">#EA6B0F</color>
+
+    <color name="orange_light">#e2743c</color>
+    <color name="orange_sel">#A6EA6B0F</color>
+    <color name="orange_divider">#B95517</color>
+    <color name="white">#fff</color>
+    <color name="white_spento">#CCFFFFFF</color>
+    <color name="bk_spinner">#F4B587</color>
+    <color name="black">#000</color>
+    <color name="gray_button">#999</color>
+    <color name="green_button">#33CC33</color>
+    <color name="red_button">#FF3D00</color>
+    <color name="red_color">#FF0000</color>
+    <color name="red_tr">#cc0000</color>
+    <color name="gray">#CCCCCC</color>
+    <color name="background_label">#d6d6d6</color>
+
+    <!-- background color tabs in tutti i punti dell'app -->
+    <color name="orange_sb">#F7931E</color>
+    <color name="sfondo_dettaglio_copia_arancione">#e2743c</color>
+    <color name="sfondo_background_drawer">#de6426</color>
+
+    <color name="gray_background_popup">#cccccc</color>
+    <color name="gray_padre">#f2f4f4</color>
+    <color name="marrone_cachi">#9D5333</color>
+
+    <color name="orange_pressed">#33EA6B0F</color>
+
+    <color name="orange_sovratitolo">#efbcaa</color>
+    <color name="blue_sticky">#24509a</color>
+    <color name="blue_sticky_pressed">#6624509a</color>
+    <color name="blue_sticky_frame">#6685b8</color>
+    <color name="gray_voci_adapter">#9a9a9a</color>
+
+
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+
+    <color name="gray_background">#ebebeb</color>
+    <color name="gray_label_carat">#a9a9a9</color>
+
+    <color name="orange_sigla">#59280f</color>
+
+    <color name="text_tab_selected">#FFFFFFFF</color>
+    <color name="text_tab_unselected">#CCFFFFFF</color>
+    <color name="orange_titlebar">#EA6B0F</color>
+    <color name="orange_titlebar_pressed">#F4B587</color>
+    <color name="orange_applicazioni">#EA6B0F</color>
+    <color name="gray_background_home_applicazioni">#EBEBEB</color>
+
+    <color name="grigio_scuro">#808080</color>
+    <color name="grigio_chiaro">#cccccc</color>
+    <color name="blue">#5e7bcc</color>
+    <color name="giallo">#f9ca68</color>
+    <color name="verde">#00CD13</color>
+    <color name="arancio">#F99000</color>
+
+    <color name="transparent_color">#00000000</color>
+
+    <color name="grigio_scuro_divisore">#868686</color>
+    <color name="grigio_chiaro_note">#f5f5f5</color>
+    <color name="grigio_nuova_criticita">#EBEBEB</color>
+    <color name="azzurro_dettaglio_criticita">#18a8ad</color>
+
+    <color name="tab_selezionabile">#df6426</color>
+    <color name="tab_selezionabile_pressed">#DD783A</color>
+    <color name="blue_tab">#234f9a</color>
+
+
+    <color name="grigio_chiaro_1">#F0F0F0</color>
+    <color name="grigio_chiaro_2">#F8F8F8</color>
+    <color name="grigio_item_criticita">#ABABAB</color>
+    <color name="grigio_item_criticita_pressed">#808080</color>
+    <color name="grigio_background_foto">#E1E1E1</color>
+
+    <color name="blu_toolbar_inferiore">#234F99</color>
+    <color name="blu_toolbar_inferiore_pressed">#9eb3ee</color>
+
+    <color name="azzurro">#33B5E5</color>
+    <color name="header_gray">#afafaf</color>
+    <color name="header_orange">#e96a0e</color>
+    <color name="white_text">#ffffff</color>
+
+    <color name="red_barra_attivita">#dd0000</color>
+    <color name="red_selezione_eliminazione">#BBdd0000</color>
+    <color name="grigio">#e4e4e4</color>
+    <color name="grigio_eliminazione_allegato">#d7d7d7</color>
+    <color name="grigio_testo_card_allegati">#7F7F7F</color>
 </resources>

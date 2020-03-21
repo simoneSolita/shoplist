@@ -86,19 +86,21 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(String nome) {
-                if (!TextUtils.isEmpty(nome)){
+            public void onItemClick(String idProdotto) {
+                if (!TextUtils.isEmpty(idProdotto)){
                     Intent intentToDettaglio = new Intent(MainActivity.this,DettaglioProdottoActivity.class);
-                    intentToDettaglio.putExtra(IntentConstant.NOME_PRODOTTO,nome);
+                    intentToDettaglio.putExtra(IntentConstant.ID_PRODOTTO,idProdotto);
                     intentToDettaglio.putExtra(IntentConstant.MODALITA_APERTURA,IntentConstant.VISUALIZZA);
                     startActivity(intentToDettaglio);
+                }else{
+                    Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onItemDelete(final String nome) {
-                if (!TextUtils.isEmpty(nome)){
-                    final ArrayList<Prodotto> prodottiToDelete = ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiByCursor(ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiByNome(nome));
+            public void onItemDelete(final String idProdotto) {
+                if (!TextUtils.isEmpty(idProdotto)){
+                    final ArrayList<Prodotto> prodottiToDelete = ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiByCursor(ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiById(idProdotto));
                     if (prodottiToDelete != null && !prodottiToDelete.isEmpty()) {
                         final Prodotto prodotto = prodottiToDelete.get(0);
                         if (prodotto != null) {
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                                     .setCancelable(false)
                                     .setPositiveButton(MainActivity.this.getString(R.string.OK), new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
-                                            ShoplistDatabaseManager.getInstance(MainActivity.this).deleteProdottoByNome(prodotto.getNome());
+                                            ShoplistDatabaseManager.getInstance(MainActivity.this).deleteProdottoById(prodotto.getId());
                                             createAdapter();
                                         }
                                     })
@@ -121,17 +123,23 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(MainActivity.this, R.string.errore_generico, Toast.LENGTH_LONG).show();
                         }
+                    }else{
+                        Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
                     }
+                }else{
+                    Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
-            public void onItemEdit(String nome) {
-                if (!TextUtils.isEmpty(nome)){
+            public void onItemEdit(String idProdotto) {
+                if (!TextUtils.isEmpty(idProdotto)){
                     Intent intentToDettaglio = new Intent(MainActivity.this,DettaglioProdottoActivity.class);
-                    intentToDettaglio.putExtra(IntentConstant.NOME_PRODOTTO,nome);
+                    intentToDettaglio.putExtra(IntentConstant.ID_PRODOTTO,idProdotto);
                     intentToDettaglio.putExtra(IntentConstant.MODALITA_APERTURA,IntentConstant.MODIFICA);
                     startActivity(intentToDettaglio);
+                }else{
+                    Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
                 }
             }
         });

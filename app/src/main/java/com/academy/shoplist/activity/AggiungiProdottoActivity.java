@@ -16,15 +16,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.academy.shoplist.R;
+import com.academy.shoplist.bean.Immagine;
 import com.academy.shoplist.bean.Prodotto;
 import com.academy.shoplist.constants.IntentConstant;
 import com.academy.shoplist.database.ShoplistDatabaseManager;
-import com.academy.shoplist.singleton.ShoplistApplication;
+import com.academy.shoplist.utils.Utility;
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 
-public class AggiungiProdottoActivity  extends AppCompatActivity {
+public class AggiungiProdottoActivity extends AppCompatActivity {
 
     String nomeProdotto;
     String descrizioneProdotto;
+    String quantita;
+    String idProdotto;
+    String idImmagine;
+    Immagine immagine;
+    boolean isImmagineSalvata;
+
+    EditText editNomeProdotto;
+    EditText editDescrizioneProdotto;
+    EditText editDescrizioneQuantita;
+    AwesomeValidation awesomeValidation = new AwesomeValidation(ValidationStyle.COLORATION);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,33 +46,19 @@ public class AggiungiProdottoActivity  extends AppCompatActivity {
         setContentView(R.layout.aggiungi_prodotto_activity);
         setActionbar();
         setContent();
+        setValidation();
+        idProdotto = Utility.createIdProdotto();
+        idImmagine = Utility.createIdImmagine();
     }
 
-    private void setContent(){
-        final EditText editNomeProdotto = (EditText) findViewById(R.id.editText_nome_prodotto);
-        final EditText editDescrizioneProdotto = (EditText) findViewById(R.id.editText_descrizione_prodotto);
-
-        Button btnAggiungi = (Button) findViewById(R.id.btnAggiungi);
-        btnAggiungi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                nomeProdotto = editNomeProdotto.getText().toString();
-                descrizioneProdotto = editDescrizioneProdotto.getText().toString();
-
-                if (TextUtils.isEmpty(nomeProdotto) || TextUtils.isEmpty(descrizioneProdotto)){
-                    Toast.makeText(AggiungiProdottoActivity.this, R.string.campi_non_valorizzati,Toast.LENGTH_LONG).show();
-                }else{
-                    //right
-                    ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).addProdotto(new Prodotto(R.drawable.lavatrice,nomeProdotto,descrizioneProdotto));
-                    setResult(IntentConstant.RISULTATO_AGGIUNTA_OK);
-                    finish();
-                }
-            }
-        });
+    private void setContent() {
+        editNomeProdotto        = (EditText) findViewById(R.id.editText_nome_prodotto);
+        editDescrizioneProdotto = (EditText) findViewById(R.id.editText_descrizione_prodotto);
+        editDescrizioneQuantita = (EditText) findViewById(R.id.editText_quantita);
     }
 
     // imposta l'aspetto iniziale della actionBar
-    private void setActionbar(){
+    private void setActionbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(myToolbar);
         TextView textToolbar = (TextView) findViewById(R.id.textViewTitolo);
@@ -71,9 +71,32 @@ public class AggiungiProdottoActivity  extends AppCompatActivity {
                 finishActivity();
             }
         });
+
+        Button buttonConferma = (Button) findViewById(R.id.conferma_toolbar);
+        buttonConferma.setVisibility(View.VISIBLE);
+        buttonConferma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (awesomeValidation.validate()) {
+                    nomeProdotto = editNomeProdotto.getText().toString();
+                    descrizioneProdotto = editDescrizioneProdotto.getText().toString();
+                    quantita = editDescrizioneQuantita.getText().toString();
+                    //Salvo eventualmente l'immagine
+                    if (immagine != null && !TextUtils.isEmpty(immagine.getId()) && immagine.getContenuto() != null) {
+                        ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).addImmagine(immagine);
+                        isImmagineSalvata = true;
+                    }
+                    // se è stata salvata un'immagine, inserisco l'id, altrimenti null
+                    String idImmagineAssociata = isImmagineSalvata ? idImmagine : null;
+                    ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).addProdotto(new Prodotto(idProdotto, idImmagineAssociata, nomeProdotto, descrizioneProdotto, quantita));
+                    setResult(IntentConstant.RISULTATO_AGGIUNTA_OK);
+                    finish();
+                }
+            }
+        });
     }
 
-    private void finishActivity(){
+    private void finishActivity() {
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.attenzione))
                 .setMessage(this.getString(R.string.conferma_back))
@@ -91,4 +114,9 @@ public class AggiungiProdottoActivity  extends AppCompatActivity {
                 })
                 .show();
     }
+
+    private void setValidation() {
+        awesomeValidation.addValidation(AggiungiProdottoActivity.this, R.id.editText_nome_prodotto, RegexTemplate.NOT_EMPTY, R.string.nome_non_valorizzato);
+    }
+
 }
