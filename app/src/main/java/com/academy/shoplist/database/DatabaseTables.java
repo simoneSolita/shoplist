@@ -9,7 +9,7 @@ public class DatabaseTables {
             DbConstants.PRODOTTI_TABLE_NOME               + " TEXT, "+
             DbConstants.PRODOTTI_TABLE_DESCRIZIONE        + " TEXT, "+
             DbConstants.PRODOTTI_TABLE_QUANTITA           + " TEXT, "+
-            DbConstants.PRODOTTI_TABLE_ID_IMMAGINE + " INTEGER"+
+            DbConstants.PRODOTTI_TABLE_ID_IMMAGINE + " TEXT"+
             " );";
 
     public static final String SQL_CREATE_IMMAGINE = " CREATE TABLE IF NOT EXISTS " + DbConstants.IMMAGINE_TABLE + " (" +

@@ -15,7 +15,7 @@
     <string name="nessun_elemento_da_visualizzare">Nessun elemento da visualizzare</string>
     <string name="conferma_eliminazione">Sei sicuro di voler eliminare il prodotto con nome :</string>
     <string name="dettaglio_prodotto">Dettaglio prodotto</string>
-    <string name="immagine_prodotto">immagine_prodotto</string>
+    <string name="immagine_prodotto">immagine prodotto</string>
     <string name="modifica_prodotto">modifica_prodotto</string>
     <string name="elimina_prodotto">elimina_prodotto</string>
 
@@ -32,4 +32,7 @@
     <string name="inserimento_foto_camera">Fotocamera</string>
     <string name="inserimento_foto_galleria">Galleria</string>
     <string name="conferma_aggiunta">Conferma</string>
+    <string name="seleziona_immagine">Carica...</string>
+    <string name="permission_not_granted">Permessi non accettati</string>
+    <string name="impossibile_salvare_immagine_riprova">Impossibile salvare foto, riprova</string>
 </resources>

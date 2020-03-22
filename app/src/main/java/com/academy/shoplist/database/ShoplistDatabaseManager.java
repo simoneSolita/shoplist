@@ -9,6 +9,7 @@ import android.util.Log;
 import com.academy.shoplist.bean.Immagine;
 import com.academy.shoplist.bean.Prodotto;
 import com.academy.shoplist.constants.DbConstants;
+import com.academy.shoplist.utils.AllegatiUtils;
 import com.academy.shoplist.utils.Utility;
 
 import java.util.ArrayList;
@@ -39,6 +40,11 @@ public class ShoplistDatabaseManager extends DatabaseManager {
 
     public ArrayList<Prodotto> getProdottiByCursor(Cursor cursore) {
         ArrayList<Prodotto> listaProdotti = new ArrayList<>();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (cursore != null && cursore.getCount() != 0) {
             while (cursore.moveToNext()) {
                 Prodotto prodotto = new Prodotto();
@@ -62,6 +68,7 @@ public class ShoplistDatabaseManager extends DatabaseManager {
             values.put(DbConstants.PRODOTTI_TABLE_NOME, prodotto.getNome());
             values.put(DbConstants.PRODOTTI_TABLE_ID, prodotto.getId());
             values.put(DbConstants.PRODOTTI_TABLE_DESCRIZIONE, prodotto.getDescrizione());
+            values.put(DbConstants.PRODOTTI_TABLE_ID_IMMAGINE, prodotto.getIdImmagine());
             values.put(DbConstants.PRODOTTI_TABLE_QUANTITA, prodotto.getQuantita());
             database.insert(DbConstants.PRODOTTI_TABLE, null, values);
             Log.i("Elemento inserito ", "Prodotto con nome : " + prodotto.getNome());
@@ -130,9 +137,9 @@ public class ShoplistDatabaseManager extends DatabaseManager {
         try {
             ContentValues values = new ContentValues();
             values.put(DbConstants.IMMAGINE_TABLE_ID, immagine.getId());
-            byte[] byteContenuto = Utility.getBitmapAsByteArray(immagine.getContenuto());
+            byte[] byteContenuto = AllegatiUtils.getBitmapAsByteArray(immagine.getContenuto());
             values.put(DbConstants.IMMAGINE_TABLE_CONTENUTO, byteContenuto);
-            database.insert(DbConstants.PRODOTTI_TABLE, null, values);
+            database.insert(DbConstants.IMMAGINE_TABLE, null, values);
             Log.i("Elemento inserito ", "Immagine con id : " + immagine.getId());
             database.setTransactionSuccessful();
         } catch (Exception ex) {
@@ -158,7 +165,7 @@ public class ShoplistDatabaseManager extends DatabaseManager {
         database.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            byte[] byteContenuto = Utility.getBitmapAsByteArray(immagine.getContenuto());
+            byte[] byteContenuto = AllegatiUtils.getBitmapAsByteArray(immagine.getContenuto());
             values.put(DbConstants.IMMAGINE_TABLE_CONTENUTO, byteContenuto);
             Log.d("Immagini modificate","Immagini modificate : " +database.update(DbConstants.IMMAGINE_TABLE, values, DbConstants.IMMAGINE_TABLE_ID + " = ?", new String[]{idImmagine}));
             database.setTransactionSuccessful();
