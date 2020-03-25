@@ -10,7 +10,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+
 import androidx.appcompat.app.AlertDialog;
+
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -36,6 +39,8 @@ import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -128,7 +133,7 @@ public class AggiungiProdottoActivity extends AppCompatActivity {
                             checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED ||
                             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                         //Permission not granted, ask them
-                        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                         requestPermissions(permissions, IntentConstant.PERMISSION_CODE);
                     } else {
                         openDialogGetImage();
@@ -158,7 +163,7 @@ public class AggiungiProdottoActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void openCameraForImmagine(){
+    private void openCameraForImmagine() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         photoFile = null;
         // Ensure that there's a camera activity to handle the intent
@@ -185,16 +190,17 @@ public class AggiungiProdottoActivity extends AppCompatActivity {
         }
     }
 
-    private void openGalleryForImage(){
+    private void openGalleryForImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Pick an image"), IntentConstant.IMAGE_PICK_CODE_GALLERY);
     }
 
-    private void refreshImageView(){
+    private void refreshImageView() {
         ArrayList<Immagine> listaImmagini = ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).getImmaginiByCursor(ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).getImmagineById(idImmagine));
-        if (listaImmagini!= null && !listaImmagini.isEmpty()){
-            imgView_immagine.setImageBitmap(listaImmagini.get(0).getContenuto());
+        if (listaImmagini != null && !listaImmagini.isEmpty()) {
+            Bitmap bitmapAllegato = AllegatiUtils.getBitmapByBase64(listaImmagini.get(0).getContenuto());
+            imgView_immagine.setImageBitmap(bitmapAllegato);
         }
 
     }
@@ -205,14 +211,14 @@ public class AggiungiProdottoActivity extends AppCompatActivity {
         switch (requestCode) {
             case IntentConstant.PERMISSION_CODE:
                 boolean validation = true;
-                if (grantResults.length>0){
-                    for (int i=0;i<grantResults.length;i++){
-                        if (grantResults[i] == PackageManager.PERMISSION_DENIED){
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                             validation = false;
                             break;
                         }
                     }
-                }else{
+                } else {
                     validation = false;
                 }
                 if (validation) {
@@ -233,8 +239,17 @@ public class AggiungiProdottoActivity extends AppCompatActivity {
                 case IntentConstant.IMAGE_PICK_CODE_GALLERY:
                     try {
                         InputStream is = getContentResolver().openInputStream(data.getData());
+                        byte[] targetArray = new byte[0];
+                        try {
+                            targetArray = new byte[is.available()];
+                            is.read(targetArray);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         Bitmap bm = BitmapFactory.decodeStream(is);
-                        immagine.setContenuto(bm);
+                        String base64Immagine = Base64.encodeToString(targetArray,Base64.DEFAULT);
+                        immagine.setContenuto(base64Immagine);
                         immagine.setId(idImmagine);
 
                         //elimino l'immagine precedente
@@ -254,19 +269,16 @@ public class AggiungiProdottoActivity extends AppCompatActivity {
                     String imgDecodableString = photoFile.getPath();
                     String imageName = AllegatiUtils.getLocalLowQName(photoFile.getName(), false);
                     Bitmap bm = AllegatiUtils.decodeSampledBitmapFromResource(imgDecodableString, MainConstant.MAX_IMAGE_SIDE_LENGTH);
-                    immagine.setContenuto(bm);
                     immagine.setId(idImmagine);
-                    Map<String,String> newPicture = AllegatiUtils.savePicture(bm, imageName);
+                    String base64Image = AllegatiUtils.savePicture(bm, imageName);
+                    immagine.setContenuto(base64Image);
+                    //elimino l'immagine precedente
+                    ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).deleteImmagineById(idImmagine);
 
-                    for(String set: newPicture.keySet()) {
-                        //elimino l'immagine precedente
-                        ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).deleteImmagineById(idImmagine);
-
-                        //salvo l'immagine su DataBase
-                        ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).addImmagine(immagine);
-                        //setto a true il salvataggio dell'immagine
-                        isImmagineSalvata = true;
-                    }
+                    //salvo l'immagine su DataBase
+                    ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).addImmagine(immagine);
+                    //setto a true il salvataggio dell'immagine
+                    isImmagineSalvata = true;
 
                     photoFile = null;
                     refreshImageView();
@@ -284,7 +296,7 @@ public class AggiungiProdottoActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         setResult(IntentConstant.RISULTATO_AGGIUNTA_KO);
                         //se ho salvato un immagine la elimino per non intasare il DB
-                        if (!isImmagineSalvata) {
+                        if (isImmagineSalvata) {
                             ShoplistDatabaseManager.getInstance(AggiungiProdottoActivity.this).deleteImmagineById(idImmagine);
                         }
                         finish();

@@ -161,7 +161,7 @@ public class AllegatiUtils {
         return inSampleSize;
     }
 
-    public static Map<String, String> savePicture(Bitmap bm, String imgName) {
+    public static String savePicture(Bitmap bm, String imgName) {
         OutputStream fOut = null;
         String strDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath();
         String encoded = "";
@@ -193,8 +193,13 @@ public class AllegatiUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Map<String, String> newPicture = new HashMap<>();
-        newPicture.put(file.getPath(), encoded);
-        return newPicture;
+
+        return encoded;
+    }
+
+    public static Bitmap getBitmapByBase64 (String base64){
+        byte[] decodedString = Base64.decode(base64, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
     }
 }

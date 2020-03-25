@@ -19,8 +19,6 @@
     <string name="modifica_prodotto">modifica_prodotto</string>
     <string name="elimina_prodotto">elimina_prodotto</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="quantita_prodotto">quantita</string>
     <string name="edit_tag">modifica</string>
     <string name="item_name">Nome prodotto</string>

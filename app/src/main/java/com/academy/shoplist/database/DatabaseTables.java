@@ -14,7 +14,7 @@ public class DatabaseTables {
 
     public static final String SQL_CREATE_IMMAGINE = " CREATE TABLE IF NOT EXISTS " + DbConstants.IMMAGINE_TABLE + " (" +
             DbConstants.IMMAGINE_TABLE_ID              + " TEXT, " +
-            DbConstants.IMMAGINE_TABLE_CONTENUTO       + " BLOB"+
+            DbConstants.IMMAGINE_TABLE_CONTENUTO       + " TEXT"+
             " );";
 
 }

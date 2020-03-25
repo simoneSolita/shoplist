@@ -66,7 +66,11 @@ public class ModificaProdottoFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                //TODO modifica prodotto
+                //TODO modifica immagine
+                p.setQuantita(editText_quantita_prodotto.getText().toString());
+                p.setNome(editText_nome_prodotto.getText().toString());
+                p.setDescrizione(editText_descrizione_prodotto.getText().toString());
+                ShoplistDatabaseManager.getInstance(getActivity()).updateProdottoByID(p,idProdotto);
             }
         });
     }

@@ -1,11 +1,17 @@
 package com.academy.shoplist.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AlertDialog;
+
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +28,7 @@ import com.academy.shoplist.bean.Prodotto;
 import com.academy.shoplist.constants.IntentConstant;
 import com.academy.shoplist.database.ShoplistDatabaseManager;
 import com.academy.shoplist.interfaces.OnItemClickListener;
+import com.academy.shoplist.singleton.ShoplistApplication;
 
 import java.util.ArrayList;
 
@@ -36,9 +43,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_activity);
         setActionbar();
         setContent();
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        ShoplistApplication.widthScreen = outMetrics.widthPixels;
+        ShoplistApplication.heightScreen = outMetrics.heightPixels;
+        ShoplistApplication.density = getResources().getDisplayMetrics().density;
+        ShoplistApplication.dpHeight = outMetrics.heightPixels / ShoplistApplication.density;
+        ShoplistApplication.dpWidth = outMetrics.widthPixels / ShoplistApplication.density;
+
     }
 
-    private void setContent(){
+    private void setContent() {
         mRecyclerView = findViewById(R.id.RecycleView);
         mLayout = new LinearLayoutManager(this);
         createAdapter();
@@ -46,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // imposta l'aspetto iniziale della actionBar
-    private void setActionbar(){
+    private void setActionbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(myToolbar);
         ImageView imageAdd = (ImageView) findViewById(R.id.aggiungi_toolbar);
@@ -56,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         imageAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intentToAddProdotto = new Intent(MainActivity.this,AggiungiProdottoActivity.class);
+                Intent intentToAddProdotto = new Intent(MainActivity.this, AggiungiProdottoActivity.class);
                 startActivityForResult(intentToAddProdotto, IntentConstant.AGGIUNGI_PRODOTTO);
             }
         });
@@ -66,40 +84,40 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case IntentConstant.AGGIUNGI_PRODOTTO:
-                if (resultCode == IntentConstant.RISULTATO_AGGIUNTA_OK){
+                if (resultCode == IntentConstant.RISULTATO_AGGIUNTA_OK) {
                     createAdapter();
-                }else if (resultCode == IntentConstant.RISULTATO_AGGIUNTA_KO){
-                    Toast.makeText(this,R.string.nessun_prodotto_aggiunto,Toast.LENGTH_LONG).show();
+                } else if (resultCode == IntentConstant.RISULTATO_AGGIUNTA_KO) {
+                    Toast.makeText(this, R.string.nessun_prodotto_aggiunto, Toast.LENGTH_LONG).show();
                 }
                 break;
             default:
-                Toast.makeText(this,R.string.errore_generico,Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.errore_generico, Toast.LENGTH_LONG).show();
         }
     }
 
-    public void createAdapter(){
-        mAdapter = new ProdottoAdapter(ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiByCursor(ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiToShow()));
+    public void createAdapter() {
+        mAdapter = new ProdottoAdapter(ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiByCursor(ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiToShow()), MainActivity.this);
         mRecyclerView.setLayoutManager(mLayout);
         mRecyclerView.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(String idProdotto) {
-                if (!TextUtils.isEmpty(idProdotto)){
-                    Intent intentToDettaglio = new Intent(MainActivity.this,DettaglioProdottoActivity.class);
-                    intentToDettaglio.putExtra(IntentConstant.ID_PRODOTTO,idProdotto);
-                    intentToDettaglio.putExtra(IntentConstant.MODALITA_APERTURA,IntentConstant.VISUALIZZA);
+                if (!TextUtils.isEmpty(idProdotto)) {
+                    Intent intentToDettaglio = new Intent(MainActivity.this, DettaglioProdottoActivity.class);
+                    intentToDettaglio.putExtra(IntentConstant.ID_PRODOTTO, idProdotto);
+                    intentToDettaglio.putExtra(IntentConstant.MODALITA_APERTURA, IntentConstant.VISUALIZZA);
                     startActivity(intentToDettaglio);
-                }else{
-                    Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, MainActivity.this.getString(R.string.id_prodotto_non_reperito), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onItemDelete(final String idProdotto) {
-                if (!TextUtils.isEmpty(idProdotto)){
+                if (!TextUtils.isEmpty(idProdotto)) {
                     final ArrayList<Prodotto> prodottiToDelete = ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiByCursor(ShoplistDatabaseManager.getInstance(MainActivity.this).getProdottiById(idProdotto));
                     if (prodottiToDelete != null && !prodottiToDelete.isEmpty()) {
                         final Prodotto prodotto = prodottiToDelete.get(0);
@@ -123,23 +141,23 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(MainActivity.this, R.string.errore_generico, Toast.LENGTH_LONG).show();
                         }
-                    }else{
-                        Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, MainActivity.this.getString(R.string.id_prodotto_non_reperito), Toast.LENGTH_LONG).show();
                     }
-                }else{
-                    Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, MainActivity.this.getString(R.string.id_prodotto_non_reperito), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onItemEdit(String idProdotto) {
-                if (!TextUtils.isEmpty(idProdotto)){
-                    Intent intentToDettaglio = new Intent(MainActivity.this,DettaglioProdottoActivity.class);
-                    intentToDettaglio.putExtra(IntentConstant.ID_PRODOTTO,idProdotto);
-                    intentToDettaglio.putExtra(IntentConstant.MODALITA_APERTURA,IntentConstant.MODIFICA);
+                if (!TextUtils.isEmpty(idProdotto)) {
+                    Intent intentToDettaglio = new Intent(MainActivity.this, DettaglioProdottoActivity.class);
+                    intentToDettaglio.putExtra(IntentConstant.ID_PRODOTTO, idProdotto);
+                    intentToDettaglio.putExtra(IntentConstant.MODALITA_APERTURA, IntentConstant.MODIFICA);
                     startActivity(intentToDettaglio);
-                }else{
-                    Toast.makeText(MainActivity.this,MainActivity.this.getString(R.string.id_prodotto_non_reperito),Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(MainActivity.this, MainActivity.this.getString(R.string.id_prodotto_non_reperito), Toast.LENGTH_LONG).show();
                 }
             }
         });

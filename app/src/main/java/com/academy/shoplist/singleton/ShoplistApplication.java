@@ -1,12 +1,13 @@
 package com.academy.shoplist.singleton;
 
-import com.academy.shoplist.bean.Prodotto;
-
-import java.util.ArrayList;
-
 public class ShoplistApplication {
 
-//    private static ArrayList<Prodotto> prodotti = new ArrayList<>();
+    public static float widthScreen;
+    public static float heightScreen;
+
+    public static float density;
+    public static float dpHeight;
+    public static float dpWidth;
 
     private ShoplistApplication (){
     }
@@ -24,27 +25,6 @@ public class ShoplistApplication {
         }
         return instance;
     }
-
-//    public void addProdottoToList(Prodotto prodottoToAdd){
-//        prodotti.add(prodottoToAdd);
-//    }
-//
-//    public ArrayList<Prodotto> getProdotti (){
-//        return prodotti;
-//    }
-//
-//    public Prodotto getProdottoAtPosition (int position){
-//        if (prodotti != null) {
-//            return prodotti.get(position);
-//        }
-//        return null;
-//    }
-//
-//    public void removeProdottoAtPosition (int position){
-//        if (prodotti != null) {
-//            prodotti.remove(position);
-//        }
-//    }
 
 
 

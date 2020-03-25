@@ -1,13 +1,11 @@
 package com.academy.shoplist.bean;
 
-import android.graphics.Bitmap;
-
 public class Immagine {
 
     private String id;
-    private Bitmap contenuto;
+    private String contenuto;
 
-    public Immagine(String id, Bitmap  contenuto) {
+    public Immagine(String id, String  contenuto) {
         this.id = id;
         this.contenuto = contenuto;
     }
@@ -23,11 +21,11 @@ public class Immagine {
         this.id = id;
     }
 
-    public Bitmap  getContenuto() {
+    public String  getContenuto() {
         return contenuto;
     }
 
-    public void setContenuto(Bitmap contenuto) {
+    public void setContenuto(String contenuto) {
         this.contenuto = contenuto;
     }
 }

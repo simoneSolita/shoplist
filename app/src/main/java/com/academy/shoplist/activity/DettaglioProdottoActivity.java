@@ -91,7 +91,6 @@ public class DettaglioProdottoActivity extends AppCompatActivity implements Frag
 
     @Override
     public int onItemClicked(int position) {
-        //TODO modificare
         return 0;
     }
 }

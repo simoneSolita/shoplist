@@ -117,12 +117,7 @@ public class ShoplistDatabaseManager extends DatabaseManager {
             while (cursore.moveToNext()) {
                 Immagine immagine = new Immagine();
                 immagine.setId(cursore.getString(cursore.getColumnIndex(DbConstants.IMMAGINE_TABLE_ID)));
-                byte[] byteContenutoImmagine = cursore.getBlob(cursore.getColumnIndex(DbConstants.IMMAGINE_TABLE_CONTENUTO));
-                if (byteContenutoImmagine != null && byteContenutoImmagine.length > 0) {
-                    immagine.setContenuto(BitmapFactory.decodeByteArray(byteContenutoImmagine, 0, byteContenutoImmagine.length));
-                } else {
-                    Log.e("Error immage", "Errore conversione contenuto immagine con ID " + immagine.getId());
-                }
+                immagine.setContenuto(cursore.getString(cursore.getColumnIndex(DbConstants.IMMAGINE_TABLE_CONTENUTO)));
                 listaImmagini.add(immagine);
             }
             cursore.close();
@@ -137,8 +132,7 @@ public class ShoplistDatabaseManager extends DatabaseManager {
         try {
             ContentValues values = new ContentValues();
             values.put(DbConstants.IMMAGINE_TABLE_ID, immagine.getId());
-            byte[] byteContenuto = AllegatiUtils.getBitmapAsByteArray(immagine.getContenuto());
-            values.put(DbConstants.IMMAGINE_TABLE_CONTENUTO, byteContenuto);
+            values.put(DbConstants.IMMAGINE_TABLE_CONTENUTO, immagine.getContenuto());
             database.insert(DbConstants.IMMAGINE_TABLE, null, values);
             Log.i("Elemento inserito ", "Immagine con id : " + immagine.getId());
             database.setTransactionSuccessful();
@@ -165,8 +159,7 @@ public class ShoplistDatabaseManager extends DatabaseManager {
         database.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            byte[] byteContenuto = AllegatiUtils.getBitmapAsByteArray(immagine.getContenuto());
-            values.put(DbConstants.IMMAGINE_TABLE_CONTENUTO, byteContenuto);
+            values.put(DbConstants.IMMAGINE_TABLE_CONTENUTO, immagine.getContenuto());
             Log.d("Immagini modificate","Immagini modificate : " +database.update(DbConstants.IMMAGINE_TABLE, values, DbConstants.IMMAGINE_TABLE_ID + " = ?", new String[]{idImmagine}));
             database.setTransactionSuccessful();
         } catch (Exception ex) {

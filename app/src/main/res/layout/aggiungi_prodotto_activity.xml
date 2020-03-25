@@ -89,29 +89,23 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/aggiungi_immagine_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/textview_immagine">
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/button_background"
+            android:layout_below="@+id/textview_immagine"
+            android:padding="2dp"
+            android:text="@string/seleziona_immagine" />
 
-            <Button
-                android:id="@+id/aggiungi_immagine_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/seleziona_immagine"
-                android:background="@drawable/button_background"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:padding="2dp"/>
-
-            <ImageView
-                android:id="@+id/image_prodotto"
-                android:layout_width="400dp"
-                android:layout_height="400dp"
-                android:layout_below="@+id/aggiungi_immagine_button"
-                android:scaleType="centerCrop"
-                android:visibility="gone"/>
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/image_prodotto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/aggiungi_immagine_button"
+            android:scaleType="centerCrop"
+            android:visibility="visible" />
     </RelativeLayout>
 </LinearLayout>
